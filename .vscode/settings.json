@@ -1,0 +1,5 @@
+{
+  "editor.renderValidationDecorations": "off",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
