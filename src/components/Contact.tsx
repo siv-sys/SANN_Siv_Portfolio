@@ -1,36 +1,95 @@
-import React from 'react';
+import { useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Mail, Smartphone, Globe, Send, MessageSquare, PhoneForwarded, CalendarDays } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { useLanguage } from '../lib/language';
+
+const ownerEmail = 'siv.sann@student.passerellesnumeriques.org';
+const telegramBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+const telegramChatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
 export function Contact() {
+  const { t } = useLanguage();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'missing-config'>('idle');
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!telegramBotToken || !telegramChatId) {
+      setSubmitStatus('missing-config');
+      return;
+    }
+
+    setSubmitStatus('sending');
+
+    const text = [
+      'New portfolio message',
+      `Name: ${formData.name || 'Not provided'}`,
+      `Email: ${formData.email || 'Not provided'}`,
+      `Subject: ${formData.subject || 'Portfolio message'}`,
+      `Message: ${formData.message || 'No message provided.'}`,
+    ].join('\n');
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Telegram request failed.');
+      }
+
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setSubmitStatus('sent');
+    } catch (error) {
+      setSubmitStatus('error');
+    }
+  };
+
   const contactInfo = [
     { 
       icon: <MapPin className="text-error" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
-      title: 'Location', 
+      title: t('contact.location'), 
       value: '371, Sen sok, Phnom Penh', 
-      linkText: 'View on Map',
+      linkText: t('contact.viewMap'),
+      href: 'https://maps.app.goo.gl/1Ya9tCPvAR6iAciK9',
       bgColor: 'bg-error/10'
     },
     { 
       icon: <Mail className="text-primary" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
-      title: 'Email', 
-      value: 'neaksinu752@email.com', 
-      linkText: 'Send Email',
+      title: t('contact.email'), 
+      value: ownerEmail,
+      linkText: t('contact.sendEmail'),
+      href: `mailto:${ownerEmail}`,
       bgColor: 'bg-primary/10'
     },
     { 
       icon: <Smartphone className="text-tertiary" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
-      title: 'Phone', 
-      value: '+855 969780938', 
-      linkText: 'Call Now',
+      title: t('contact.phone'), 
+      value: '+855 879 129 05', 
+      linkText: t('contact.callNow'),
+      href: 'tel:+855969780938',
       bgColor: 'bg-tertiary/10'
     },
     { 
       icon: <Globe className="text-secondary" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
-      title: 'Social Media', 
-      value: 'Follow my journey', 
-      linkText: 'Connect',
+      title: t('contact.social'), 
+      value: t('contact.follow'), 
+      linkText: t('contact.connect'),
+      href: '#',
       bgColor: 'bg-secondary/10'
     },
   ];
@@ -43,11 +102,11 @@ export function Contact() {
           animate={{ opacity: 1, y: 0 }}
           className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-mono mb-4"
         >
-          Get In Touch
+          {t('contact.badge')}
         </motion.div>
-        <h1 className="text-6xl md:text-7xl text-primary mb-2">Contact Me</h1>
+        <h1 className="text-6xl md:text-7xl text-primary mb-2">{t('contact.title')}</h1>
         <p className="text-on-surface-variant text-lg md:text-xl font-sans max-w-2xl mx-auto">
-          Let's discuss your next project and bring your ideas to life.
+          {t('contact.description')}
         </p>
       </header>
 
@@ -65,10 +124,10 @@ export function Contact() {
               <div className={cn("p-4 rounded-2xl shrink-0", info.bgColor)}>
                 {info.icon}
               </div>
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-mono text-xs uppercase tracking-widest text-primary mb-1">{info.title}</h3>
-                <p className="text-on-surface mb-2 font-medium">{info.value}</p>
-                <a href="#" className="text-secondary text-xs font-mono uppercase tracking-widest hover:underline decoration-secondary/30">
+                <p className="max-w-full break-all text-on-surface mb-2 font-medium leading-relaxed">{info.value}</p>
+                <a href={info.href} target={info.href.startsWith('http') ? '_blank' : undefined} rel={info.href.startsWith('http') ? 'noreferrer' : undefined} className="text-secondary text-xs font-mono uppercase tracking-widest hover:underline decoration-secondary/30">
                   {info.linkText}
                 </a>
               </div>
@@ -84,56 +143,74 @@ export function Contact() {
             className="glass-panel inner-glow p-10 md:p-12 rounded-[2.5rem]"
           >
             <div className="text-center mb-12">
-              <h2 className="text-3xl text-primary mb-2">Send me a message</h2>
-              <p className="text-on-surface-variant text-xs font-mono uppercase tracking-widest">I'll get back to you within 24 hours</p>
+              <h2 className="text-3xl text-primary mb-2">{t('contact.formTitle')}</h2>
+              <p className="text-on-surface-variant text-xs font-mono uppercase tracking-widest">{t('contact.formSubtitle')}</p>
             </div>
 
-            <form className="space-y-8">
+            <form className="space-y-8" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">Full Name</label>
+                  <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.fullName')}</label>
                   <input 
                     type="text" 
-                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
+                    placeholder={t('contact.fullNamePlaceholder')}
                     className="w-full bg-surface-variant/10 border-outline-variant/30 rounded-2xl py-4 px-6 text-on-surface outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-on-surface-variant/40"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">Email Address</label>
+                  <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.emailAddress')}</label>
                   <input 
                     type="email" 
-                    placeholder="Enter your email address"
+                    value={formData.email}
+                    onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
+                    placeholder={t('contact.emailPlaceholder')}
                     className="w-full bg-surface-variant/10 border-outline-variant/30 rounded-2xl py-4 px-6 text-on-surface outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-on-surface-variant/40"
                   />
                 </div>
               </div>
 
               <div className="space-y-3">
-                <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">Subject</label>
-                <select className="w-full bg-surface-variant/10 border-outline-variant/30 rounded-2xl py-4 px-6 text-on-surface outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all appearance-none cursor-pointer">
-                  <option className="bg-surface">Select a subject</option>
-                  <option className="bg-surface">Project Inquiry</option>
-                  <option className="bg-surface">Collaboration</option>
-                  <option className="bg-surface">Saying Hello</option>
+                <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.subject')}</label>
+                <select
+                  value={formData.subject}
+                  onChange={(event) => setFormData((current) => ({ ...current, subject: event.target.value }))}
+                  className="w-full bg-surface-variant/10 border-outline-variant/30 rounded-2xl py-4 px-6 text-on-surface outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" className="bg-surface">{t('contact.selectSubject')}</option>
+                  <option value="Project Inquiry" className="bg-surface">{t('contact.projectInquiry')}</option>
+                  <option value="Collaboration" className="bg-surface">{t('contact.collaboration')}</option>
+                  <option value="Saying Hello" className="bg-surface">{t('contact.sayingHello')}</option>
                 </select>
               </div>
 
               <div className="space-y-3">
-                <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">Message</label>
+                <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.message')}</label>
                 <textarea 
                   rows={5}
-                  placeholder="Tell me about your project or how I can help you..."
+                  value={formData.message}
+                  onChange={(event) => setFormData((current) => ({ ...current, message: event.target.value }))}
+                  placeholder={t('contact.messagePlaceholder')}
                   className="w-full bg-surface-variant/10 border-outline-variant/30 rounded-2xl py-4 px-6 text-on-surface outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-on-surface-variant/40 resize-none"
                 />
               </div>
 
               <button 
                 type="submit"
+                disabled={submitStatus === 'sending'}
                 className="w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-secondary text-on-primary font-bold font-mono text-sm tracking-widest uppercase shadow-[0_0_20px_rgba(76,215,246,0.2)] hover:shadow-[0_0_30px_rgba(76,215,246,0.4)] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
               >
                 <Send size={18} />
-                Send Message
+                {submitStatus === 'sending' ? t('contact.sending') : t('contact.sendMessage')}
               </button>
+              {submitStatus !== 'idle' && (
+                <p className="text-center text-sm font-medium text-on-surface-variant">
+                  {submitStatus === 'sent' && t('contact.sent')}
+                  {submitStatus === 'error' && t('contact.failed')}
+                  {submitStatus === 'missing-config' && t('contact.notConfigured')}
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
@@ -141,12 +218,12 @@ export function Contact() {
 
       {/* Quick Actions */}
       <section className="mt-24 text-center">
-        <h2 className="text-4xl text-primary mb-12 italic">Quick Actions</h2>
+        <h2 className="text-4xl text-primary mb-12 italic">{t('contact.quickActions')}</h2>
         <div className="flex flex-wrap justify-center gap-6">
           {[
-            { icon: <MessageSquare size={20} />, label: 'Email Me', color: 'text-tertiary', bgColor: 'bg-tertiary/10' },
-            { icon: <PhoneForwarded size={20} />, label: 'Call Me', color: 'text-secondary', bgColor: 'bg-secondary/10' },
-            { icon: <CalendarDays size={20} />, label: 'Schedule Call', color: 'text-primary', bgColor: 'bg-primary/10' },
+            { icon: <MessageSquare size={20} />, label: t('contact.emailMe'), color: 'text-tertiary', bgColor: 'bg-tertiary/10' },
+            { icon: <PhoneForwarded size={20} />, label: t('contact.callMe'), color: 'text-secondary', bgColor: 'bg-secondary/10' },
+            { icon: <CalendarDays size={20} />, label: t('contact.scheduleCall'), color: 'text-primary', bgColor: 'bg-primary/10' },
           ].map((action, i) => (
             <motion.button 
               key={action.label}

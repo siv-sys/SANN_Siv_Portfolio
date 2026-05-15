@@ -3,15 +3,19 @@ import { motion } from 'motion/react';
 import { FileText, Rocket, Star, Coffee, Target, Lightbulb, Users, Diamond } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { CvDownloadButton } from './CvDownloadButton';
+import { useLanguage } from '../lib/language';
 
 const profileImage = new URL('../images/Siv Sann.png', import.meta.url).href;
+const resumeUrl = '/resume/siv_resume.pdf';
+const resumeFileName = 'siv_resume.pdf';
 
 export function About() {
+  const { t } = useLanguage();
   const stats = [
-    { icon: <Rocket size={20} />, value: '25+', label: 'Projects', color: 'text-primary' },
-    { icon: <Star size={20} />, value: '3+', label: 'Years Exp.', color: 'text-secondary' },
-    { icon: <Coffee size={20} />, value: '1000+', label: 'Coffees', color: 'text-tertiary' },
-    { icon: <Target size={20} />, value: '98%', label: 'Success', color: 'text-error' },
+    { icon: <Rocket size={20} />, value: '25+', label: t('about.projects'), color: 'text-primary' },
+    { icon: <Star size={20} />, value: '3+', label: t('about.yearsExp'), color: 'text-secondary' },
+    { icon: <Coffee size={20} />, value: '1000+', label: t('about.coffees'), color: 'text-tertiary' },
+    { icon: <Target size={20} />, value: '98%', label: t('about.success'), color: 'text-error' },
   ];
 
   return (
@@ -22,10 +26,10 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           className="inline-block px-4 py-1.5 rounded-full glass-panel text-secondary text-sm font-mono mb-4"
         >
-          Get to know me
+          {t('about.badge')}
         </motion.div>
         <h1 className="text-6xl md:text-7xl">
-          About <span className="text-secondary italic font-serif">Me</span>
+          {t('about.titleA')} <span className="text-secondary italic font-serif">{t('about.titleB')}</span>
         </h1>
       </div>
 
@@ -45,15 +49,15 @@ export function About() {
             />
           </div>
           <h3 className="text-2xl text-on-surface mb-1">Siv Sann</h3>
-          <p className="text-primary font-mono text-sm mb-6">Full-Stack Developer</p>
+          <p className="text-primary font-mono text-sm mb-6">{t('about.role')}</p>
           <div className="flex items-center gap-2 text-secondary mb-8">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-wider">Available for work</span>
+            <span className="text-xs font-mono uppercase tracking-wider">{t('about.available')}</span>
           </div>
           <div className="w-full text-left space-y-4">
-            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">Professional Profile</h4>
+            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">{t('about.profileTitle')}</h4>
             <p className="text-on-surface-variant text-sm leading-relaxed">
-              Passionate developer from Cambodia crafting digital experiences with modern web technologies.
+              {t('about.profileText')}
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               {['Vue.js', 'PHP', 'MySQL'].map(tag => (
@@ -70,14 +74,14 @@ export function About() {
           transition={{ delay: 0.1 }}
           className="md:col-span-4 glass-panel p-8 rounded-3xl flex flex-col hover:border-secondary/40 transition-colors group"
         >
-          <h3 className="text-2xl text-on-surface mb-2">Technical Skills</h3>
-          <p className="text-on-surface-variant text-sm mb-8 font-sans">Core Technologies & Expertise</p>
+          <h3 className="text-2xl text-on-surface mb-2">{t('about.skillsTitle')}</h3>
+          <p className="text-on-surface-variant text-sm mb-8 font-sans">{t('about.skillsSubtitle')}</p>
           
           <div className="space-y-6 mb-8 group">
             {[
-              { label: 'Frontend', value: 90, color: 'bg-primary' },
-              { label: 'Backend', value: 85, color: 'bg-secondary' },
-              { label: 'Database', value: 75, color: 'bg-tertiary' }
+              { label: t('about.frontend'), value: 90, color: 'bg-primary' },
+              { label: t('about.backend'), value: 85, color: 'bg-secondary' },
+              { label: t('about.database'), value: 75, color: 'bg-tertiary' }
             ].map(skill => (
               <div key={skill.label} className="space-y-2">
                 <div className="flex justify-between text-xs font-mono">
@@ -97,9 +101,9 @@ export function About() {
           </div>
 
           <div className="mt-auto space-y-4">
-            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">Experience</h4>
+            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">{t('about.experienceTitle')}</h4>
             <p className="text-on-surface-variant text-sm leading-relaxed">
-              Modern web development stack with 3+ years experience across various projects.
+              {t('about.experienceText')}
             </p>
           </div>
         </motion.div>
@@ -111,8 +115,8 @@ export function About() {
           transition={{ delay: 0.2 }}
           className="md:col-span-4 glass-panel p-8 rounded-3xl flex flex-col hover:border-tertiary/40 transition-colors"
         >
-          <h3 className="text-2xl text-on-surface mb-2">Achievements</h3>
-          <p className="text-on-surface-variant text-sm mb-8 font-sans">Numbers That Matter</p>
+          <h3 className="text-2xl text-on-surface mb-2">{t('about.achievements')}</h3>
+          <p className="text-on-surface-variant text-sm mb-8 font-sans">{t('about.achievementsSubtitle')}</p>
           
           <div className="grid grid-cols-2 gap-4 mb-8">
             {stats.map((stat, i) => (
@@ -125,15 +129,15 @@ export function About() {
           </div>
 
           <div className="mt-auto space-y-4">
-            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">Key Philosophy</h4>
+            <h4 className="font-bold text-on-surface text-sm uppercase tracking-widest font-mono">{t('about.philosophy')}</h4>
             <div className="space-y-4">
               <div className="flex gap-3">
                 <Lightbulb size={16} className="text-primary shrink-0" />
-                <p className="text-[12px] text-on-surface-variant font-sans">Innovation driven by technical precision.</p>
+                <p className="text-[12px] text-on-surface-variant font-sans">{t('about.philosophyOne')}</p>
               </div>
               <div className="flex gap-3">
                 <Users size={16} className="text-secondary shrink-0" />
-                <p className="text-[12px] text-on-surface-variant font-sans">Continuous shared learning and growth.</p>
+                <p className="text-[12px] text-on-surface-variant font-sans">{t('about.philosophyTwo')}</p>
               </div>
             </div>
           </div>
@@ -152,13 +156,22 @@ export function About() {
               <FileText size={40} />
             </div>
             <div>
-              <h3 className="text-xl text-on-surface mb-1">Resume</h3>
-              <p className="text-on-surface-variant text-sm font-sans">Download or View Online</p>
+              <h3 className="text-xl text-on-surface mb-1">{t('about.resume')}</h3>
+              <p className="text-on-surface-variant text-sm font-sans">{t('about.resumeSubtitle')}</p>
             </div>
           </div>
           <div className="flex gap-2">
-            <CvDownloadButton className="px-4 py-2 rounded-full glass-panel text-[10px] font-bold uppercase text-primary hover:bg-primary hover:text-on-primary transition-all disabled:cursor-wait disabled:opacity-70">Download</CvDownloadButton>
-            <a href="/cv/Sann_Siv_CV.pdf" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full glass-panel text-[10px] font-bold uppercase text-on-surface hover:bg-white/10 transition-all">View</a>
+            <CvDownloadButton
+              ariaLabel="Download resume"
+              className="px-4 py-2 rounded-full glass-panel text-[10px] font-bold uppercase text-primary hover:bg-primary hover:text-on-primary transition-all disabled:cursor-wait disabled:opacity-70"
+              fileUrl={resumeUrl}
+              fileName={resumeFileName}
+              title={t('download.resumeTitle')}
+              iconLabel="R"
+            >
+              {t('common.download')}
+            </CvDownloadButton>
+            <a href={resumeUrl} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full glass-panel text-[10px] font-bold uppercase text-on-surface hover:bg-white/10 transition-all">{t('common.view')}</a>
           </div>
         </motion.div>
 
@@ -174,12 +187,12 @@ export function About() {
               <div className="w-10 h-10 rounded-full border-2 border-surface glass-panel flex items-center justify-center"><Diamond size={20} className="text-secondary" /></div>
             </div>
             <div>
-              <h3 className="text-xl text-on-surface mb-1">Core Values</h3>
-              <p className="text-on-surface-variant text-sm font-sans">Passion, Integrity, Scalability</p>
+              <h3 className="text-xl text-on-surface mb-1">{t('about.coreValues')}</h3>
+              <p className="text-on-surface-variant text-sm font-sans">{t('about.coreValuesSubtitle')}</p>
             </div>
           </div>
           <div className="flex gap-2">
-            {['Innovation', 'Quality'].map(v => (
+            {[t('about.innovation'), t('about.quality')].map(v => (
               <span key={v} className="px-3 py-1 rounded glass-panel text-[10px] font-mono uppercase text-tertiary">{v}</span>
             ))}
           </div>

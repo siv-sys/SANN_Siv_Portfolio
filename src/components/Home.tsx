@@ -1,12 +1,51 @@
-import React from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Code, Terminal, Globe, Share2 } from 'lucide-react';
 import { CvDownloadButton } from './CvDownloadButton';
+import { useLanguage } from '../lib/language';
 
 const profileImage = new URL('../images/Siv Sann.png', import.meta.url).href;
 
 export function Home() {
+  const { t } = useLanguage();
+  const [shareStatus, setShareStatus] = useState('');
+  const [isCvDownloadOpen, setIsCvDownloadOpen] = useState(false);
   const techStack = ['TypeScript', 'React.js', 'Tailwind', 'Node.js'];
+  const portfolioUrl = typeof window === 'undefined' ? '' : window.location.origin;
+
+  const showShareStatus = (message: string) => {
+    setShareStatus(message);
+    window.setTimeout(() => setShareStatus(''), 2200);
+  };
+
+  const openPortfolio = () => {
+    window.open(portfolioUrl || '/', '_blank', 'noopener,noreferrer');
+  };
+
+  const sharePortfolio = async () => {
+    const shareData = {
+      title: 'Siv Sann Portfolio',
+      text: 'Check out Siv Sann portfolio.',
+      url: portfolioUrl || window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        showShareStatus('Shared');
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareData.url);
+      showShareStatus('Link copied');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
+      showShareStatus('Share unavailable');
+    }
+  };
 
   return (
     <div className="relative min-h-screen pt-32 overflow-hidden">
@@ -22,16 +61,16 @@ export function Home() {
           className="z-10 order-2 lg:order-1 text-center lg:text-left"
         >
           <span className="inline-block px-4 py-1.5 rounded-full glass-panel text-primary text-sm font-mono mb-6 border-primary/20">
-            Hi, I'm
+            {t('home.greeting')}
           </span>
           <h1 className="text-6xl md:text-8xl text-on-surface mb-2">
             Siv Sann
           </h1>
           <h2 className="text-3xl md:text-4xl text-primary mb-8 font-serif">
-            Web Developer
+            {t('home.role')}
           </h2>
           <p className="text-lg md:text-xl text-on-surface-variant max-w-xl mb-10 mx-auto lg:mx-0 leading-relaxed">
-            Crafting high-performance web applications with precision. I build fast, scalable, and secure full-stack solutions using modern technologies.
+            {t('home.description')}
           </p>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
@@ -44,61 +83,82 @@ export function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
             <a href="#projects" className="px-8 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-on-primary font-bold shadow-[0_0_20px_rgba(76,215,246,0.3)] hover:shadow-[0_0_30px_rgba(76,215,246,0.5)] transition-all duration-300 transform hover:scale-105 active:scale-95">
-              View My Work
+              {t('home.viewWork')}
             </a>
-            <CvDownloadButton className="px-8 py-3 rounded-full border border-primary/40 hover:bg-primary/10 transition-all duration-300 text-primary font-bold disabled:cursor-wait disabled:opacity-70">
-              Download CV
+            <CvDownloadButton
+              className="px-8 py-3 rounded-full border border-primary/40 hover:bg-primary/10 transition-all duration-300 text-primary font-bold disabled:cursor-wait disabled:opacity-70"
+              onOpenChange={setIsCvDownloadOpen}
+            >
+              {t('home.downloadCv')}
             </CvDownloadButton>
             <div className="flex gap-4 ml-0 lg:ml-6 mt-4 sm:mt-0">
-              <a href="#" className="w-12 h-12 flex items-center justify-center rounded-full glass-panel border-outline-variant/30 text-on-surface-variant hover:text-primary transition-all">
+              <button
+                type="button"
+                aria-label="Open portfolio"
+                title="Open portfolio"
+                onClick={openPortfolio}
+                className="w-12 h-12 flex items-center justify-center rounded-full glass-panel border-outline-variant/30 text-on-surface-variant hover:text-primary transition-all"
+              >
                 <Globe size={20} />
-              </a>
-              <a href="#" className="w-12 h-12 flex items-center justify-center rounded-full glass-panel border-outline-variant/30 text-on-surface-variant hover:text-primary transition-all">
+              </button>
+              <button
+                type="button"
+                aria-label="Share portfolio"
+                title="Share portfolio"
+                onClick={sharePortfolio}
+                className="relative w-12 h-12 flex items-center justify-center rounded-full glass-panel border-outline-variant/30 text-on-surface-variant hover:text-primary transition-all"
+              >
                 <Share2 size={20} />
-              </a>
+                {shareStatus && (
+                  <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-surface-container-high px-3 py-1 text-xs font-bold text-on-surface shadow-lg">
+                    {shareStatus}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
         </motion.div>
 
-        {/* Profile Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="order-1 lg:order-2 flex justify-center lg:justify-end relative"
-        >
-          <div className="relative w-80 h-80 md:w-[500px] md:h-[500px]">
-            {/* Aurora Frame */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary via-secondary/20 to-tertiary animate-pulse blur-md opacity-30" />
-            <div className="absolute inset-2 rounded-full border-2 border-white/20 z-0 shadow-[0_0_80px_10px_rgba(76,215,246,0.2)]" />
-            
-            {/* Main Image */}
-            <div className="absolute inset-6 rounded-full overflow-hidden border-4 border-white/5 z-10">
-              <img 
-                alt="Siv Sann" 
-                className="w-full h-full object-cover" 
-                src={profileImage} 
-                referrerPolicy="no-referrer"
-              />
-            </div>
+        {!isCvDownloadOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1 }}
+            className="home-profile-visual order-1 lg:order-2 flex justify-center lg:justify-end relative"
+          >
+            <div className="relative w-80 h-80 md:w-[500px] md:h-[500px]">
+              {/* Aurora Frame */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary via-secondary/20 to-tertiary animate-pulse blur-md opacity-30" />
+              <div className="absolute inset-2 rounded-full border-2 border-white/20 z-0 shadow-[0_0_80px_10px_rgba(76,215,246,0.2)]" />
+              
+              {/* Main Image */}
+              <div className="absolute inset-6 rounded-full overflow-hidden border-4 border-white/5 z-10">
+                <img
+                  alt="Siv Sann"
+                  className="w-full h-full object-cover"
+                  src={profileImage}
+                  referrerPolicy="no-referrer"
+                />
+              </div>
 
-            {/* Floating Tech Icons */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="absolute top-10 right-0 w-16 h-16 rounded-2xl glass-panel flex items-center justify-center z-20 shadow-xl border-white/10"
-            >
-              <Code className="text-primary" size={32} />
-            </motion.div>
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 5, repeat: Infinity }}
-              className="absolute bottom-10 -left-4 w-14 h-14 rounded-2xl glass-panel flex items-center justify-center z-20 shadow-xl border-white/10"
-            >
-              <Terminal className="text-secondary" size={28} />
-            </motion.div>
-          </div>
-        </motion.div>
+              {/* Floating Tech Icons */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute top-10 right-0 w-16 h-16 rounded-2xl glass-panel flex items-center justify-center z-20 shadow-xl border-white/10"
+              >
+                <Code className="text-primary" size={32} />
+              </motion.div>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity }}
+                className="absolute bottom-10 -left-4 w-14 h-14 rounded-2xl glass-panel flex items-center justify-center z-20 shadow-xl border-white/10"
+              >
+                <Terminal className="text-secondary" size={28} />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ExternalLink, Github, Star, Calendar, Zap, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { useLanguage } from '../lib/language';
 
 interface Project {
   id: number;
@@ -75,7 +76,17 @@ const projects: Project[] = [
 const categories = ["All", "Web Apps", "Chatbot Algorithms", "UX/UI Design", "Frontend", "Full Stack", "Mobile"];
 
 export function Projects() {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("All");
+  const categoryLabels: Record<string, string> = {
+    All: t('projects.all'),
+    'Web Apps': t('projects.webApps'),
+    'Chatbot Algorithms': t('projects.chatbotAlgorithms'),
+    'UX/UI Design': t('projects.uxUiDesign'),
+    Frontend: t('about.frontend'),
+    'Full Stack': 'Full Stack',
+    Mobile: t('projects.mobile'),
+  };
 
   const filteredProjects = activeCategory === "All" 
     ? projects 
@@ -97,7 +108,7 @@ export function Projects() {
                   : "bg-surface-container-low border-outline-variant/30 text-on-surface-variant hover:border-primary/50 hover:text-on-surface"
               )}
             >
-              {cat}
+              {categoryLabels[cat] ?? cat}
             </button>
           ))}
         </div>
@@ -125,7 +136,7 @@ export function Projects() {
                 />
                 <div className="absolute top-4 right-4 bg-secondary/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 text-[10px] font-bold text-on-secondary-container">
                   <CheckCircle2 size={12} />
-                  {project.status}
+                  {project.status === 'Completed' ? t('projects.completed') : t('projects.inProgress')}
                 </div>
                 {project.type && (
                   <div className="absolute bottom-4 right-4 bg-primary/20 backdrop-blur-md px-3 py-1 rounded-lg border border-primary/30 text-[10px] font-bold text-primary italic">
@@ -170,11 +181,11 @@ export function Projects() {
                 <div className="flex gap-3 mt-auto">
                   <button className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-xs flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(76,215,246,0.3)]">
                     <ExternalLink size={14} />
-                    View Project
+                    {t('projects.viewProject')}
                   </button>
                   <button className="flex-1 py-2.5 rounded-xl border border-outline-variant/30 text-on-surface font-bold text-xs flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
                     <Github size={14} />
-                    Source Code
+                    {t('projects.sourceCode')}
                   </button>
                 </div>
               </div>

@@ -95,4 +95,8 @@
   .inner-glow {
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
   }
+
+  .cv-download-open .home-profile-visual {
+    display: none;
+  }
 }

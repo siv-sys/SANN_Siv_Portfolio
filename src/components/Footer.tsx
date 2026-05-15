@@ -1,13 +1,15 @@
 import React from 'react';
+import { useLanguage } from '../lib/language';
 
 export function Footer() {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
   const socialLinks = [
-    { name: 'LinkedIn', href: '#' },
-    { name: 'GitHub', href: '#' },
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/sann-siv-5a9153376/' },
+    { name: 'GitHub', href: 'https://github.com/siv-sys' },
     { name: 'Twitter', href: '#' },
     { name: 'Email', href: '#' },
-    { name: 'Privacy Policy', href: '#' },
+    { name: t('footer.privacy'), href: '#' },
   ];
 
   return (
@@ -16,7 +18,7 @@ export function Footer() {
         <div className="flex flex-col items-center md:items-start gap-2">
           <span className="font-serif text-2xl text-primary font-bold">Siv Sann</span>
           <p className="text-on-surface-variant text-sm md:text-base text-center md:text-left font-sans">
-            &copy; {currentYear} Siv Sann. Built with precision and passion.
+            &copy; {currentYear} Siv Sann. {t('footer.built')}
           </p>
         </div>
 

@@ -2,14 +2,16 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Palette, Terminal, Database, Wrench, Layout, Cpu, Database as DbIcon, Code2 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { useLanguage } from '../lib/language';
 
 export function Skills() {
+  const { t } = useLanguage();
   const categories = [
-    { name: 'All', icon: <Terminal size={18} />, count: 8 },
-    { name: 'Frontend', icon: <Palette size={18} />, count: 4 },
-    { name: 'Backend', icon: <Cpu size={18} />, count: 2 },
-    { name: 'Database', icon: <Database size={18} />, count: 1 },
-    { name: 'Tools', icon: <Wrench size={18} />, count: 1 },
+    { name: t('skills.all'), icon: <Terminal size={18} />, count: 8 },
+    { name: t('about.frontend'), icon: <Palette size={18} />, count: 4 },
+    { name: t('about.backend'), icon: <Cpu size={18} />, count: 2 },
+    { name: t('about.database'), icon: <Database size={18} />, count: 1 },
+    { name: t('skills.tools'), icon: <Wrench size={18} />, count: 1 },
   ];
 
   const skillCards = [
@@ -19,8 +21,8 @@ export function Skills() {
       expertise: 95,
       icon: <Layout className="text-white" size={48} />,
       gradient: 'from-[#FF6B35] to-[#0b1326]',
-      tags: ['Semantic', 'Accessibility', 'SEO'],
-      exp: '3 years exp.'
+      tags: [t('skills.semantic'), t('skills.accessibility'), 'SEO'],
+      exp: t('skills.years3')
     },
     {
       title: 'CSS3 & SCSS',
@@ -28,8 +30,8 @@ export function Skills() {
       expertise: 90,
       icon: <Palette className="text-white" size={48} />,
       gradient: 'from-[#2D9CDB] to-[#0b1326]',
-      tags: ['Responsive', 'Animations', 'Flexbox'],
-      exp: '4 years exp.'
+      tags: [t('skills.responsive'), t('skills.animations'), 'Flexbox'],
+      exp: t('skills.years4')
     },
     {
       title: 'JavaScript',
@@ -38,7 +40,7 @@ export function Skills() {
       icon: <Code2 className="text-white" size={48} />,
       gradient: 'from-[#F2C94C] to-[#0b1326]',
       tags: ['ES6+', 'DOM', 'Async'],
-      exp: '3 years exp.'
+      exp: t('skills.years3')
     },
     {
       title: 'Vue.js',
@@ -47,7 +49,7 @@ export function Skills() {
       icon: <Layout className="text-white" size={48} />,
       gradient: 'from-[#27AE60] to-[#0b1326]',
       tags: ['Reactive', 'SPA', 'Vuex'],
-      exp: '3 years exp.'
+      exp: t('skills.years3')
     },
     {
       title: 'PHP',
@@ -56,7 +58,7 @@ export function Skills() {
       icon: <Terminal className="text-white" size={48} />,
       gradient: 'from-[#9B51E0] to-[#0b1326]',
       tags: ['Laravel', 'APIs', 'MVC'],
-      exp: '2 years exp.'
+      exp: t('skills.years2')
     },
     {
       title: 'MySQL',
@@ -64,8 +66,8 @@ export function Skills() {
       expertise: 80,
       icon: <DbIcon className="text-white" size={48} />,
       gradient: 'from-[#00758F] to-[#0b1326]',
-      tags: ['Relational', 'Optimization', 'SQL'],
-      exp: '2 years exp.'
+      tags: [t('skills.relational'), t('skills.optimization'), 'SQL'],
+      exp: t('skills.years2')
     },
   ];
 
@@ -77,11 +79,11 @@ export function Skills() {
           animate={{ opacity: 1, scale: 1 }}
           className="inline-flex items-center px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary font-mono text-xs mb-6"
         >
-          Technical Expertise
+          {t('skills.badge')}
         </motion.div>
-        <h1 className="text-6xl md:text-7xl text-on-surface mb-4">My Skills</h1>
+        <h1 className="text-6xl md:text-7xl text-on-surface mb-4">{t('skills.title')}</h1>
         <p className="text-on-surface-variant max-w-2xl mx-auto text-lg md:text-xl font-sans">
-          A collection of technologies I've mastered to build high-performance, accessible, and beautiful digital experiences.
+          {t('skills.description')}
         </p>
       </header>
 
@@ -100,7 +102,7 @@ export function Skills() {
             >
               {cat.icon}
               <span className="font-mono text-sm uppercase tracking-wider">{cat.name}</span>
-              <span className="text-[10px] opacity-60">{cat.count} skills</span>
+              <span className="text-[10px] opacity-60">{cat.count} {t('skills.skills')}</span>
             </button>
           ))}
         </div>
@@ -123,7 +125,7 @@ export function Skills() {
               </div>
               <div className="w-full max-w-[220px] mt-8">
                 <div className="flex justify-between text-[10px] font-mono text-white/80 mb-2 uppercase tracking-widest">
-                  <span>Expertise</span>
+                  <span>{t('skills.expertise')}</span>
                   <span>{skill.expertise}%</span>
                 </div>
                 <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
@@ -140,7 +142,7 @@ export function Skills() {
             <div className="p-8">
               <h3 className="text-2xl text-on-surface mb-2 tracking-tight">{skill.title}</h3>
               <p className="text-on-surface-variant text-sm mb-6 leading-relaxed font-sans">
-                Mastering modern web architectural principles to deliver clean and maintainable code bases.
+                {t('skills.cardText')}
               </p>
               <div className="flex flex-wrap gap-2 mb-6">
                 {skill.tags.map(tag => (
