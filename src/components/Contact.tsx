@@ -5,8 +5,7 @@ import { cn } from '@/src/lib/utils';
 import { useLanguage } from '../lib/language';
 
 const ownerEmail = 'siv.sann@student.passerellesnumeriques.org';
-const telegramBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-const telegramChatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+const telegramUsername = 'SannSiv';
 
 export function Contact() {
   const { t } = useLanguage();
@@ -21,41 +20,26 @@ export function Contact() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!telegramBotToken || !telegramChatId) {
-      setSubmitStatus('missing-config');
-      return;
-    }
-
     setSubmitStatus('sending');
 
-    const text = [
+    const telegramMessage = [
       'New portfolio message',
-      `Name: ${formData.name || 'Not provided'}`,
-      `Email: ${formData.email || 'Not provided'}`,
+      `Name: ${formData.name}`,
+      `Email: ${formData.email}`,
       `Subject: ${formData.subject || 'Portfolio message'}`,
-      `Message: ${formData.message || 'No message provided.'}`,
+      '',
+      formData.message,
     ].join('\n');
 
+    const telegramUrl = `https://t.me/${telegramUsername}`;
+
     try {
-      const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: telegramChatId,
-          text,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Telegram request failed.');
-      }
-
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      await navigator.clipboard?.writeText(telegramMessage);
+      window.open(telegramUrl, '_blank', 'noopener,noreferrer');
       setSubmitStatus('sent');
     } catch (error) {
-      setSubmitStatus('error');
+      window.location.href = telegramUrl;
+      setSubmitStatus('sent');
     }
   };
 
@@ -87,9 +71,9 @@ export function Contact() {
     { 
       icon: <Globe className="text-secondary" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
       title: t('contact.social'), 
-      value: t('contact.follow'), 
+      value: `@${telegramUsername}`, 
       linkText: t('contact.connect'),
-      href: '#',
+      href: `https://t.me/${telegramUsername}`,
       bgColor: 'bg-secondary/10'
     },
   ];
@@ -153,6 +137,7 @@ export function Contact() {
                   <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.fullName')}</label>
                   <input 
                     type="text" 
+                    required
                     value={formData.name}
                     onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
                     placeholder={t('contact.fullNamePlaceholder')}
@@ -163,6 +148,7 @@ export function Contact() {
                   <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.emailAddress')}</label>
                   <input 
                     type="email" 
+                    required
                     value={formData.email}
                     onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
                     placeholder={t('contact.emailPlaceholder')}
@@ -189,6 +175,7 @@ export function Contact() {
                 <label className="font-mono text-xs uppercase tracking-widest text-on-surface ml-1 opacity-80">{t('contact.message')}</label>
                 <textarea 
                   rows={5}
+                  required
                   value={formData.message}
                   onChange={(event) => setFormData((current) => ({ ...current, message: event.target.value }))}
                   placeholder={t('contact.messagePlaceholder')}

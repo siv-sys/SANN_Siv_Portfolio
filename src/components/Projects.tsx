@@ -11,6 +11,8 @@ interface Project {
   type: string;
   description: string;
   image: string;
+  projectUrl?: string;
+  sourceUrl?: string;
   tags: string[];
   stars: number;
   year: number;
@@ -26,6 +28,7 @@ const projects: Project[] = [
     type: "Full Stack",
     description: "This project allowed me to gain real-world experience building a full-stack venture capital platform. I worked on real-time analytics, portfolio management, and investor tools using JavaScript, PHP, and MySQL. I improved my skills in backend logic, API integration, and responsive UI with Bootstrap.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+    sourceUrl: "https://github.com/siv-sys/Service_Selling_Unique_Ring.git",
     tags: ['JavaScript', 'PHP', 'MySQL', 'Git', 'Jira', 'Bootstrap', 'Figma', 'AWS'],
     stars: 47,
     year: 2024,
@@ -179,14 +182,32 @@ export function Projects() {
 
                 {/* Actions */}
                 <div className="flex gap-3 mt-auto">
-                  <button className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-xs flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(76,215,246,0.3)]">
+                  <a
+                    href={project.projectUrl ?? undefined}
+                    target={project.projectUrl ? "_blank" : undefined}
+                    rel={project.projectUrl ? "noreferrer" : undefined}
+                    aria-disabled={!project.projectUrl}
+                    className={cn(
+                      "flex-1 py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-xs flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(76,215,246,0.3)]",
+                      !project.projectUrl && "pointer-events-none opacity-70"
+                    )}
+                  >
                     <ExternalLink size={14} />
                     {t('projects.viewProject')}
-                  </button>
-                  <button className="flex-1 py-2.5 rounded-xl border border-outline-variant/30 text-on-surface font-bold text-xs flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
+                  </a>
+                  <a
+                    href={project.sourceUrl ?? undefined}
+                    target={project.sourceUrl ? "_blank" : undefined}
+                    rel={project.sourceUrl ? "noreferrer" : undefined}
+                    aria-disabled={!project.sourceUrl}
+                    className={cn(
+                      "flex-1 py-2.5 rounded-xl border border-outline-variant/30 text-on-surface font-bold text-xs flex items-center justify-center gap-2 hover:bg-white/5 transition-all",
+                      !project.sourceUrl && "pointer-events-none opacity-70"
+                    )}
+                  >
                     <Github size={14} />
                     {t('projects.sourceCode')}
-                  </button>
+                  </a>
                 </div>
               </div>
             </motion.article>
