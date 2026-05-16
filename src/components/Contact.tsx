@@ -4,8 +4,12 @@ import { MapPin, Mail, Smartphone, Globe, Send, MessageSquare, PhoneForwarded, C
 import { cn } from '@/src/lib/utils';
 import { useLanguage } from '../lib/language';
 
-const ownerEmail = 'siv.sann@student.passerellesnumeriques.org';
-const telegramUsername = 'SannSiv';
+const ownerEmail = 'sannsiv49@gmail.com';
+const telegramUrl = 'https://t.me/SannSiv';
+const phoneOptions = [
+  { carrier: 'Smart', display: '+855 87 912 905', href: 'tel:+85587912905' },
+  { carrier: 'Metfone', display: '+855 97 578 9765', href: 'tel:+855969780938' },
+];
 
 export function Contact() {
   const { t } = useLanguage();
@@ -15,14 +19,15 @@ export function Contact() {
     subject: '',
     message: '',
   });
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'sent' | 'error' | 'missing-config'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [isCallMenuOpen, setIsCallMenuOpen] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setSubmitStatus('sending');
 
-    const telegramMessage = [
+    const emailBody = [
       'New portfolio message',
       `Name: ${formData.name}`,
       `Email: ${formData.email}`,
@@ -31,16 +36,11 @@ export function Contact() {
       formData.message,
     ].join('\n');
 
-    const telegramUrl = `https://t.me/${telegramUsername}`;
+    const mailSubject = formData.subject || 'Portfolio message';
+    const mailtoUrl = `mailto:${ownerEmail}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
-    try {
-      await navigator.clipboard?.writeText(telegramMessage);
-      window.open(telegramUrl, '_blank', 'noopener,noreferrer');
-      setSubmitStatus('sent');
-    } catch (error) {
-      window.location.href = telegramUrl;
-      setSubmitStatus('sent');
-    }
+    window.location.href = mailtoUrl;
+    setSubmitStatus('sent');
   };
 
   const contactInfo = [
@@ -71,9 +71,9 @@ export function Contact() {
     { 
       icon: <Globe className="text-secondary" style={{ fill: 'currentColor', fillOpacity: 0.2 }} />, 
       title: t('contact.social'), 
-      value: `@${telegramUsername}`, 
+      value: t('contact.follow'), 
       linkText: t('contact.connect'),
-      href: `https://t.me/${telegramUsername}`,
+      href: telegramUrl,
       bgColor: 'bg-secondary/10'
     },
   ];
@@ -98,8 +98,11 @@ export function Contact() {
         {/* Info Cards */}
         <aside className="lg:col-span-4 flex flex-col gap-6">
           {contactInfo.map((info, i) => (
-            <motion.div 
+            <motion.a 
               key={info.title}
+              href={info.href}
+              target={info.href.startsWith('http') ? '_blank' : undefined}
+              rel={info.href.startsWith('http') ? 'noreferrer' : undefined}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 }}
@@ -111,11 +114,11 @@ export function Contact() {
               <div className="min-w-0">
                 <h3 className="font-mono text-xs uppercase tracking-widest text-primary mb-1">{info.title}</h3>
                 <p className="max-w-full break-all text-on-surface mb-2 font-medium leading-relaxed">{info.value}</p>
-                <a href={info.href} target={info.href.startsWith('http') ? '_blank' : undefined} rel={info.href.startsWith('http') ? 'noreferrer' : undefined} className="text-secondary text-xs font-mono uppercase tracking-widest hover:underline decoration-secondary/30">
+                <span className="text-secondary text-xs font-mono uppercase tracking-widest group-hover:underline decoration-secondary/30">
                   {info.linkText}
-                </a>
+                </span>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </aside>
 
@@ -194,8 +197,6 @@ export function Contact() {
               {submitStatus !== 'idle' && (
                 <p className="text-center text-sm font-medium text-on-surface-variant">
                   {submitStatus === 'sent' && t('contact.sent')}
-                  {submitStatus === 'error' && t('contact.failed')}
-                  {submitStatus === 'missing-config' && t('contact.notConfigured')}
                 </p>
               )}
             </form>
@@ -208,22 +209,57 @@ export function Contact() {
         <h2 className="text-4xl text-primary mb-12 italic">{t('contact.quickActions')}</h2>
         <div className="flex flex-wrap justify-center gap-6">
           {[
-            { icon: <MessageSquare size={20} />, label: t('contact.emailMe'), color: 'text-tertiary', bgColor: 'bg-tertiary/10' },
-            { icon: <PhoneForwarded size={20} />, label: t('contact.callMe'), color: 'text-secondary', bgColor: 'bg-secondary/10' },
-            { icon: <CalendarDays size={20} />, label: t('contact.scheduleCall'), color: 'text-primary', bgColor: 'bg-primary/10' },
+            { icon: <MessageSquare size={20} />, label: t('contact.emailMe'), color: 'text-tertiary', bgColor: 'bg-tertiary/10', href: `mailto:${ownerEmail}` },
+            { icon: <PhoneForwarded size={20} />, label: t('contact.callMe'), color: 'text-secondary', bgColor: 'bg-secondary/10', isCallAction: true },
+            { icon: <CalendarDays size={20} />, label: t('contact.scheduleCall'), color: 'text-primary', bgColor: 'bg-primary/10', href: `mailto:${ownerEmail}?subject=${encodeURIComponent('Schedule a call')}` },
           ].map((action, i) => (
-            <motion.button 
-              key={action.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-panel inner-glow px-10 py-5 rounded-3xl flex items-center gap-4 hover:bg-surface-variant/30 transition-all duration-300 min-w-[220px] justify-center group"
-            >
-              <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", action.bgColor, action.color)}>
-                {action.icon}
-              </div>
-              <span className="font-mono text-xs uppercase tracking-widest text-on-surface">{action.label}</span>
-            </motion.button>
+            <div key={action.label} className="relative">
+              <motion.button 
+                type="button"
+                onClick={() => {
+                  if (action.isCallAction) {
+                    setIsCallMenuOpen((current) => !current);
+                    return;
+                  }
+
+                  if (action.href) {
+                    window.location.href = action.href;
+                  }
+                }}
+                aria-expanded={action.isCallAction ? isCallMenuOpen : undefined}
+                aria-haspopup={action.isCallAction ? 'menu' : undefined}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-panel inner-glow px-10 py-5 rounded-3xl flex items-center gap-4 hover:bg-surface-variant/30 transition-all duration-300 min-w-[220px] justify-center group"
+              >
+                <div className={cn("p-2.5 rounded-xl transition-transform group-hover:scale-110", action.bgColor, action.color)}>
+                  {action.icon}
+                </div>
+                <span className="font-mono text-xs uppercase tracking-widest text-on-surface">{action.label}</span>
+              </motion.button>
+              {action.isCallAction && isCallMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute left-1/2 top-[calc(100%+0.75rem)] z-20 w-[220px] -translate-x-1/2 overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-high shadow-2xl"
+                  role="menu"
+                >
+                  {phoneOptions.map((option) => (
+                    <a
+                      key={option.carrier}
+                      href={option.href}
+                      className="block px-5 py-4 text-left transition-colors hover:bg-surface-variant/30"
+                      role="menuitem"
+                      onClick={() => setIsCallMenuOpen(false)}
+                    >
+                      <span className="block font-mono text-xs uppercase tracking-widest text-secondary">{option.carrier}</span>
+                      <span className="mt-1 block text-sm font-medium text-on-surface">{option.display}</span>
+                    </a>
+                  ))}
+                </motion.div>
+              )}
+            </div>
           ))}
         </div>
       </section>
