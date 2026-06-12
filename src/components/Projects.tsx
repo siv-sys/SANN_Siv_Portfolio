@@ -26,7 +26,7 @@ const projects: Project[] = [
     title: "Virtual Company I",
     category: "Full Stack",
     type: "Full Stack",
-    description: "This project allowed me to gain real-world experience building a full-stack venture capital platform. I worked on real-time analytics, portfolio management, and investor tools using JavaScript, PHP, and MySQL. I improved my skills in backend logic, API integration, and responsive UI with Bootstrap.",
+    description: "I built a Service Selling Unique Ring project using Node.js, Express.js, React.js, Redis, MySQL, APIs, Jira, and Excel. This project helped me gain hands-on experience in full-stack development, backend API integration, database management, and responsive frontend design. I worked on building scalable services, improving application performance with Redis caching, and managing project workflows using Jira. I also strengthened my skills in teamwork, problem-solving, and developing user-friendly interfaces.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
     sourceUrl: "https://github.com/siv-sys/Service_Selling_Unique_Ring.git",
     tags: ['JavaScript', 'PHP', 'MySQL', 'Git', 'Jira', 'Bootstrap', 'Figma', 'AWS'],

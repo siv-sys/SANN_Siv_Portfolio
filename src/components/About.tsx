@@ -12,8 +12,8 @@ const resumeFileName = 'siv_resume.pdf';
 export function About() {
   const { t } = useLanguage();
   const stats = [
-    { icon: <Rocket size={20} />, value: '25+', label: t('about.projects'), color: 'text-primary' },
-    { icon: <Star size={20} />, value: '3+', label: t('about.yearsExp'), color: 'text-secondary' },
+    { icon: <Rocket size={20} />, value: '10+', label: t('about.projects'), color: 'text-primary' },
+    { icon: <Star size={20} />, value: '2+', label: t('about.yearsExp'), color: 'text-secondary' },
     { icon: <Coffee size={20} />, value: '1000+', label: t('about.coffees'), color: 'text-tertiary' },
     { icon: <Target size={20} />, value: '98%', label: t('about.success'), color: 'text-error' },
   ];
