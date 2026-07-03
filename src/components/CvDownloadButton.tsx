@@ -15,8 +15,8 @@ type CvDownloadButtonProps = {
   iconLabel?: string;
 };
 
-const defaultFileUrl = '/cv/Sann_Siv_CV.pdf';
-const defaultFileName = 'Sann_Siv_CV.pdf';
+const defaultFileUrl = '/cv/Sann_Siv_Curriculum_Vitae.pdf';
+const defaultFileName = 'Sann Siv CV.pdf';
 
 export function CvDownloadButton({
   children,

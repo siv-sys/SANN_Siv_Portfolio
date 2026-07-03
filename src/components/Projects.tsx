@@ -6,10 +6,10 @@ import { useLanguage } from '../lib/language';
 
 interface Project {
   id: number;
-  title: string;
+  titleKey: string;
+  descriptionKey: string;
   category: string;
   type: string;
-  description: string;
   image: string;
   projectUrl?: string;
   sourceUrl?: string;
@@ -23,13 +23,13 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    title: "Virtual Company I",
+    titleKey: 'projects.uniqueRing.title',
+    descriptionKey: 'projects.uniqueRing.description',
     category: "Full Stack",
     type: "Full Stack",
-    description: "I built a Service Selling Unique Ring project using Node.js, Express.js, React.js, Redis, MySQL, APIs, Jira, and Excel. This project helped me gain hands-on experience in full-stack development, backend API integration, database management, and responsive frontend design. I worked on building scalable services, improving application performance with Redis caching, and managing project workflows using Jira. I also strengthened my skills in teamwork, problem-solving, and developing user-friendly interfaces.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=800",
     sourceUrl: "https://github.com/siv-sys/Service_Selling_Unique_Ring.git",
-    tags: ['JavaScript', 'PHP', 'MySQL', 'Git', 'Jira', 'Bootstrap', 'Figma', 'AWS'],
+    tags: ['Node.js', 'Express.js', 'React.js', 'Redis', 'MySQL', 'JavaScript', 'Git', 'Jira', 'Bootstrap', 'Figma'],
     stars: 47,
     year: 2024,
     score: 98,
@@ -37,12 +37,14 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: "Smart Note Taker App",
+    titleKey: 'projects.weatherDashboard.title',
+    descriptionKey: 'projects.weatherDashboard.description',
     category: "Frontend",
     type: "Frontend",
-    description: "An intelligent note-taking application with AI-powered organization, real-time collaboration, and advanced search capabilities. Features markdown support and cloud sync with a focus on intuitive user experience and high-speed data handling.",
-    image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=800",
-    tags: ['JavaScript', 'HTML/CSS', 'SASS', 'Bootstrap', 'Firebase', 'Git', 'Figma'],
+    image: "https://images.unsplash.com/photo-1601134467661-3d775b999c8b?auto=format&fit=crop&q=80&w=800",
+    projectUrl: "https://mapweather.vercel.app/",
+    sourceUrl: "https://github.com/sreyroth1/Weather-Project-C8.git",
+    tags: ['JavaScript', 'HTML/CSS', 'SASS', 'Bootstrap', 'Git', 'Figma', 'API'],
     stars: 32,
     year: 2024,
     score: 95,
@@ -50,33 +52,49 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: "E-Commerce OOP System",
+    titleKey: 'projects.computerShop.title',
+    descriptionKey: 'projects.computerShop.description',
     category: "Full Stack",
     type: "Full Stack",
-    description: "A robust object-oriented e-commerce system demonstrating advanced OOP principles, design patterns, and clean architecture. Includes inventory management, payment processing, and comprehensive API integrations.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
-    tags: ['PHP', 'MySQL', 'OOP', 'Design Patterns', 'API'],
+    image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=800",
+    sourceUrl: "https://github.com/leak1415/computer-shop.git",
+    tags: ['PHP', 'MySQL', 'OOP', 'HTML/CSS', 'SASS', 'API'],
     stars: 28,
     year: 2023,
     score: 92,
     status: 'Completed'
   },
   {
-    id: 4,
-    title: "UX/UI Design System",
-    category: "UX/UI Design",
-    type: "UX/UI Design",
-    description: "A comprehensive design system with reusable components, design tokens, and documentation. Includes Figma components and a CSS framework for consistent user experiences across multiple digital products.",
-    image: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?auto=format&fit=crop&q=80&w=800",
-    tags: ['Figma', 'CSS', 'Design Tokens', 'Storybook', 'Documentation'],
-    stars: 15,
-    year: 2024,
-    score: 90,
+    id: 5,
+    titleKey: 'projects.inventoryManagement.title',
+    descriptionKey: 'projects.inventoryManagement.description',
+    category: "Full Stack",
+    type: "Full Stack",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800",
+    sourceUrl: "https://github.com/siv-sys/Inventory_Management_System.git",
+    tags: [ 'HTML/CSS', 'SASS', 'MySQL', 'Git', 'Python'],
+    stars: 20,
+    year: 2026,
+    score: 98,
+    status: 'Completed'
+  },
+  {
+    id: 6,
+    titleKey: 'projects.ecommerceStorage.title',
+    descriptionKey: 'projects.ecommerceStorage.description',
+    category: "Backend",
+    type: "Backend",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=800",
+    sourceUrl: "https://github.com/siv-sys/Full_Stack_Laravel",
+    tags: [ 'PHP', 'Laravel', 'MySQL', 'Git',],
+    stars: 20,
+    year: 2026,
+    score: 98,
     status: 'Completed'
   }
 ];
 
-const categories = ["All", "Web Apps", "Chatbot Algorithms", "UX/UI Design", "Frontend", "Full Stack", "Mobile"];
+const categories = ["All","UX/UI Design",  "Frontend", "Backend", "Full Stack", "Mobile"];
 
 export function Projects() {
   const { t } = useLanguage();
@@ -132,9 +150,9 @@ export function Projects() {
             >
               {/* Image Header */}
               <div className="relative h-56 overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
+                <img
+                  src={project.image}
+                  alt={t(project.titleKey)}
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                 />
                 <div className="absolute top-4 right-4 bg-secondary/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 text-[10px] font-bold text-on-secondary-container">
@@ -150,9 +168,9 @@ export function Projects() {
 
               {/* Content */}
               <div className="p-6 flex-grow flex flex-col">
-                <h3 className="text-xl text-on-surface mb-4 font-serif">{project.title}</h3>
+                <h3 className="text-xl text-on-surface mb-4 font-serif">{t(project.titleKey)}</h3>
                 <p className="text-on-surface-variant text-xs leading-relaxed mb-6 line-clamp-5 font-sans">
-                  {project.description}
+                  {t(project.descriptionKey)}
                 </p>
 
                 {/* Tech Tags */}
